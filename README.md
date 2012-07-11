@@ -1,6 +1,96 @@
 # Tabletree
 
-TODO: Write a gem description
+HTML table generator that allows arbitrary nested cell subdivisions
+and applies colspan/rowspan as needed.
+
+A very basic table:
+
+    +---+---+
+    | A | B |
+    +---+---+
+    | C | D |
+    +---+---+
+
+    Tabletree.rows do |r|
+      t.columns do |r1|
+        r1.cell("A")
+        r1.cell("B")
+      end
+      r.columns do |r2|
+        r2.cell("C")
+        r2.cell("D")
+      end
+    end
+
+    # but you can also start with columns and construct the table left-to-right. this produces the exact same result:
+
+    Tabletree.columns do |c|
+      t.row do |c1|
+        c1.cell("A")
+        c2.cell("C")
+      end
+      t.row do |c2|
+        c2.cell("B")
+        c2.cell("D")
+      end
+    end
+
+
+A more advanced example:
+
+    +---+---+---+
+    |   |   | D |
+    +   + B +---+
+    |   |   | E |
+    + A +---+---+
+    |   |   | F |
+    +   + C +---+
+    |   |   | G |
+    +---+---+---+
+
+
+    table = Tabletree.columns do |t|
+      t.cell("A")
+      t.rows do |r|
+        r.columns do |c|
+          c.cell("B")
+          c.rows do |rr|
+            rr.cell("D")
+            rr.cell("E")
+          end
+        end
+        r.columns do |c|
+          c.cell("C")
+          c.rows do |rr|
+            rr.cell("F")
+            rr.cell("G")
+          end
+        end
+      end
+    end
+
+this will generate the following output:
+
+    <table>
+      <tr>
+        <td rowspan=4>A</td>
+        <td rowspan=2>B</td>
+        <td>D</td>
+      </tr>
+      <tr>
+        <td>E</td>
+      </tr>
+      <tr>
+        <td rowspan=2>C</td>
+        <td>F</td>
+      </tr>
+      <tr>
+        <td>G</td>
+      </tr>
+    </table>
+
+
+Tabletree keeps track of all the rowspan/colspan attributes required to generate a valid HTML table
 
 ## Installation
 
