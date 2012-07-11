@@ -31,19 +31,19 @@ end
 
 describe "the example" do
   before do
-    @table = Tabletree.columns do |t|
+    @table = Tabletree.column do |t|
       t.cell("A")
-      t.rows do |r|
-        r.columns do |c|
+      t.row do |r|
+        r.column do |c|
           c.cell("B")
-          c.rows do |rr|
+          c.row do |rr|
             rr.cell("D")
             rr.cell("E")
           end
         end
-        r.columns do |c|
+        r.column do |c|
           c.cell("C")
-          c.rows do |rr|
+          c.row do |rr|
             rr.cell("F")
             rr.cell("G")
           end
@@ -61,5 +61,6 @@ describe "the example" do
     assert_equal 4, @table.height
     assert_equal 3, @table.width
   end
+
 
 end

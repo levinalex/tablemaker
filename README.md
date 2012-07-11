@@ -11,12 +11,12 @@ A very basic table:
     | C | D |
     +---+---+
 
-    Tabletree.rows do |r|
-      t.columns do |r1|
+    Tabletree.row do |r|
+      t.column do |r1|
         r1.cell("A")
         r1.cell("B")
       end
-      r.columns do |r2|
+      r.column do |r2|
         r2.cell("C")
         r2.cell("D")
       end
@@ -24,7 +24,7 @@ A very basic table:
 
     # but you can also start with columns and construct the table left-to-right. this produces the exact same result:
 
-    Tabletree.columns do |c|
+    Tabletree.column do |c|
       t.row do |c1|
         c1.cell("A")
         c2.cell("C")
@@ -49,19 +49,19 @@ A more advanced example:
     +---+---+---+
 
 
-    table = Tabletree.columns do |t|
+    table = Tabletree.column do |t|
       t.cell("A")
-      t.rows do |r|
-        r.columns do |c|
+      t.row do |r|
+        r.column do |c|
           c.cell("B")
-          c.rows do |rr|
+          c.row do |rr|
             rr.cell("D")
             rr.cell("E")
           end
         end
-        r.columns do |c|
+        r.column do |c|
           c.cell("C")
-          c.rows do |rr|
+          c.row do |rr|
             rr.cell("F")
             rr.cell("G")
           end

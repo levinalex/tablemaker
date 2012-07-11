@@ -33,7 +33,7 @@ class Tabletree
   end
 
   class Row < Node
-    def rows(&blk)
+    def row(&blk)
       @items << Column.new(&blk)
     end
 
@@ -53,13 +53,13 @@ class Tabletree
       @items.map { |i| i.width }.max
     end
 
-    def columns(&blk)
+    def column(&blk)
       @items << Row.new(&blk)
     end
   end
 
 
-  def self.columns(&blk)
+  def self.column(&blk)
     Row.new(&blk)
   end
 
