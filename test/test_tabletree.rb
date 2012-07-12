@@ -63,23 +63,28 @@ describe "the example" do
     assert_equal 3, @table.width
   end
 
-  it "should have correct dimensions for subitems" do
-    assert_equal [1, 4], @table.items.map(&:height)
-    assert_equal [2, 2], @table.items.last.items.map(&:height)
-  end
+  # it "should have correct dimensions for subitems" do
+  #   # assert_equal [1, 4], @table.items.map(&:height)
+  #   # assert_equal [2, 2], @table.items.last.items.map(&:height)
+  # end
 
-  it "should return all the cells" do
-    assert_equal 7, @table.cells.length
-  end
+  # it "should return all the cells" do
+  #   assert_equal 7, @table.cells.length
+  # end
 
-  it "should have cell_at" do
-    assert_equal "A", @table.cell_at(0,0).data
-    assert_equal "B", @table.cell_at(1,0).data
-    assert_equal "C", @table.cell_at(2,0).data
-    assert_equal "D", @table.cell_at(1,1).data
-    assert_equal "E", @table.cell_at(1,2).data
-    assert_equal "F", @table.cell_at(2,2).data
-    assert_equal "G", @table.cell_at(2,3).data
-  end
+  # it "should have cell_at" do
+  #   assert_equal "A", @table.cell_at(0,0).data
+  #   assert_equal "B", @table.cell_at(1,0).data
+  #   assert_equal "C", @table.cell_at(2,0).data
+  #   assert_equal "D", @table.cell_at(1,1).data
+  #   assert_equal "E", @table.cell_at(1,2).data
+  #   assert_equal "F", @table.cell_at(2,2).data
+  #   assert_equal "G", @table.cell_at(2,3).data
+  # end
+
+  # it "should have correct cell dimensions" do
+  #   # assert_equal [1,4], @table.cell_at(0,0).dimensions
+
+  # end
 
 end

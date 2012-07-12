@@ -24,6 +24,26 @@ class Tabletree
       end
     end
 
+    def min_height
+      @items.map(&:min_height).max
+    end
+    def min_width
+      @items.map(&:min_width).max
+    end
+    def max_height
+      @parent ?  @parent.max_height : min_height
+    end
+    def max_width
+      @parent ?  @parent.max_width : min_width
+    end
+
+    def height
+      min_height
+    end
+    def width
+      min_width
+    end
+
     def cell_at(ax,ay)
       @items.inject([ax,ay]) do |(x,y),i|
         dx = x-i.width
@@ -32,6 +52,8 @@ class Tabletree
           if i.is_a?(Cell)
             return i
           else
+            puts
+            p [[i.width, i.height], i.items.inspect]
             return i.cell_at(x,y)
           end
         end
@@ -42,6 +64,10 @@ class Tabletree
       end
       nil
     end
+
+    def inspect
+      "#{self.class.name.split("::").last[0]}#{@items.inspect}"
+    end
   end
 
   class Cell
@@ -50,11 +76,26 @@ class Tabletree
       @data = content
     end
 
-    def height
+    def min_height
       1
     end
-    def width
+    def min_width
       1
+    end
+    def max_height
+      @parent.max_height
+    end
+    def max_width
+      @parent.max_width
+    end
+    def height
+      @parent.min_height
+    end
+    def width
+      @parent.min_width
+    end
+    def dimensions
+      [width, height]
     end
 
     def data
@@ -67,11 +108,11 @@ class Tabletree
   end
 
   class Column < Node
-    def height
-      @items.map { |i| i.height }.max
+    def min_height
+      @items.map { |i| i.min_height }.max
     end
-    def width
-      @items.map { |i| i.width }.inject(&:+)
+    def min_width
+      @items.map { |i| i.min_width }.inject(&:+)
     end
     def row(&blk)
       @items << Row.new(self, @items.length, &blk)
@@ -79,11 +120,11 @@ class Tabletree
   end
 
   class Row < Node
-    def height
-      @items.map { |i| i.height }.inject(&:+)
+    def min_height
+      @items.map { |i| i.min_height }.inject(&:+)
     end
-    def width
-      @items.map { |i| i.width }.max
+    def min_width
+      @items.map { |i| i.min_width }.max
     end
     def column(&blk)
       @items << Column.new(self, @items.length, &blk)
