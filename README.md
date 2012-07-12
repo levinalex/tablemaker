@@ -39,12 +39,12 @@ A very basic table:
 A more advanced example:
 
     +---+---+---+
-    |   |   | D |
-    +   + B +---+
-    |   |   | E |
+    |   | B |   |
+    +   +---+ C +
+    |   | D |   |
     + A +---+---+
     |   |   | F |
-    +   + C +---+
+    +   + E +---+
     |   |   | G |
     +---+---+---+
 
@@ -53,14 +53,14 @@ A more advanced example:
       t.cell("A")
       t.row do |r|
         r.column do |c|
-          c.cell("B")
           c.row do |rr|
+            rr.cell("B")
             rr.cell("D")
-            rr.cell("E")
           end
+          c.cell("C")
         end
         r.column do |c|
-          c.cell("C")
+          c.cell("E")
           c.row do |rr|
             rr.cell("F")
             rr.cell("G")
