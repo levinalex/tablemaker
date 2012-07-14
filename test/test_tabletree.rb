@@ -32,21 +32,31 @@ end
 describe "the example" do
   before do
 
-    @table = Tabletree.column do |t|
-      t.cell("A")
-      t.row do |r|
-        r.column do |c|
-          c.row do |rr|
-            rr.cell("B")
-            rr.cell("D")
+    # +---+---+---+
+    # |   | B |   |
+    # |   +---+ C |
+    # |   | D |   |
+    # | A +---+---+
+    # |   |   | F |
+    # |   | E +---+
+    # |   |   | G |
+    # +---+---+---+
+    #
+    @table = Tabletree.row do |t|
+      @a = t.cell("A")
+      t.column do |r|
+        @row = r.row do |c|
+          @col = c.column do |rr|
+            @b = rr.cell("B")
+            @d = rr.cell("D")
           end
-          c.cell("C")
+          @c = c.cell("C")
         end
-        r.column do |c|
-          c.cell("E")
-          c.row do |rr|
-            rr.cell("F")
-            rr.cell("G")
+        r.row do |c|
+          @e = c.cell("E")
+          c.column do |rr|
+            @f = rr.cell("F")
+            @g = rr.cell("G")
           end
         end
       end
@@ -58,10 +68,124 @@ describe "the example" do
     assert_kind_of Tabletree::Node, @table
   end
 
-  it "should have dimensions of 3/4" do
-    assert_equal 4, @table.height
-    assert_equal 3, @table.width
+  it "should return a Row for #row" do
+    assert_kind_of Tabletree::Row, @row
+    assert_equal 2, @row.rows
   end
+
+  it "should return a Column for #column" do
+    assert_kind_of Tabletree::Column, @col
+    assert_equal 1, @col.columns
+    assert_equal 2, @col.rows
+  end
+
+  it "items should have correct dimensions" do
+    assert_equal 4, @table.rows
+    assert_equal 3, @table.columns
+  end
+end
+
+
+describe "a simple column" do
+  before do
+    @col = Tabletree.column do |c|
+      c.cell("A")
+      c.cell("B")
+    end
+  end
+
+  it "should have 2 rows, 1 column" do
+    assert_equal 2, @col.rows
+    assert_equal 1, @col.columns
+  end
+end
+
+describe "nested columns" do
+  before do
+    @col = Tabletree.column do |c|
+      c.cell("A")
+      @row = c.row do |r|
+        r.column do |c2|
+          c2.cell("B")
+          c2.cell("C")
+        end
+      end
+    end
+  end
+
+  it "should have 3 rows, 1 column" do
+    assert_equal 3, @col.rows
+    assert_equal 1, @col.columns
+  end
+end
+
+describe "simple 3/2" do
+  before do
+
+    # +---+---+---+
+    # | A | B | C |
+    # +---+---+---+
+    # | D |   E   |
+    # +---+-------+
+    #
+    @table = Tabletree.column do |t|
+      @r1 = t.row do |r1|
+        @a = r1.cell("A")
+        @b = r1.cell("B")
+        @c = r1.cell("C")
+      end
+      @r2 = t.row do |r2|
+        @d = r2.cell("D")
+        @e = r2.cell("E")
+      end
+    end
+  end
+end
+
+describe "spanning cols/rows at the same time" do
+  before do
+
+    # +---+---+---+
+    # | A | B | C |
+    # +---+---+---+
+    # | D |       |
+    # +---+   F   |
+    # | E |       |
+    # +---+-------+
+    #
+    @table = Tabletree.column do |t|
+      @r1 = t.row do |r1|
+        @a = r1.cell("A")
+        @b = r1.cell("B")
+        @c = r1.cell("C")
+      end
+      @r2 = t.row do |r2|
+        @c1 = @c1 = r2.column do |c1|
+          @d = c1.cell("D")
+          c1.cell("E")
+        end
+        @c2 = r2.column do |c2|
+          @f = c2.cell("F")
+        end
+      end
+    end
+  end
+
+  it "should correctly identify last cols" do
+    assert !@r1.last?, "r1 is not last col"
+    assert @r2.last?, "r2 is last col"
+  end
+
+  it "should have correct dimensions on items" do
+    assert_equal [3,3], @table.dimensions
+    assert_equal [3,1], @r1.dimensions
+    assert_equal [1,1], @a.dimensions
+    assert_equal [3,2], @r2.real_dimensions
+    assert_equal [1,2], @c1.real_dimensions
+    assert_equal [2,2], @c2.real_dimensions
+  end
+
+end
 
   # it "should have correct dimensions for subitems" do
   #   # assert_equal [1, 4], @table.items.map(&:height)
@@ -87,4 +211,3 @@ describe "the example" do
 
   # end
 
-end
