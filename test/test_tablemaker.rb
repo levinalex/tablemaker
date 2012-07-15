@@ -1,35 +1,21 @@
 require 'helper'
 
 
-describe "tabletree" do
-  it "should work" do
+def assert_table_structure(structure, table)
+  structure = structure.dup
 
+  table.each_row do |row|
+    cells = structure.shift.dup
+    row.each do |cell|
+      assert_equal cells.shift, cell
+    end
+    assert_empty cells
   end
 
-
-  HTML = <<-EOF
-    <table>
-      <tr>
-        <td rowspan=4>A</td>
-        <td rowspan=2>B</td>
-        <td>D</td>
-      </tr>
-      <tr>
-        <td>E</td>
-      </tr>
-      <tr>
-        <td rowspan=2>C</td>
-        <td>F</td>
-      </tr>
-      <tr>
-        <td>G</td>
-      </tr>
-    </table>
-  EOF
+  assert_empty structure
 end
 
-
-describe "the example" do
+describe "an example table" do
   before do
 
     # +---+---+---+
@@ -42,7 +28,7 @@ describe "the example" do
     # |   |   | G |
     # +---+---+---+
     #
-    @table = Tabletree.row do |t|
+    @table = Tablemaker.row do |t|
       @a = t.cell("A")
       t.column do |r|
         @row = r.row do |c|
@@ -65,16 +51,16 @@ describe "the example" do
 
   it "should compile without errors" do
     assert @table
-    assert_kind_of Tabletree::Node, @table
+    assert_kind_of Tablemaker::Node, @table
   end
 
   it "should return a Row for #row" do
-    assert_kind_of Tabletree::Row, @row
+    assert_kind_of Tablemaker::Row, @row
     assert_equal 2, @row.rows
   end
 
   it "should return a Column for #column" do
-    assert_kind_of Tabletree::Column, @col
+    assert_kind_of Tablemaker::Column, @col
     assert_equal 1, @col.columns
     assert_equal 2, @col.rows
   end
@@ -93,24 +79,14 @@ describe "the example" do
   end
 
   it "should allow iteration over rows/cols" do
-    rows_cells = [[@a, @b, @c], [@d], [@e, @f], [@g]]
-
-    @table.each_row do |row|
-      cells = rows_cells.shift
-      row.each do |cell|
-        assert_equal cells.shift, cell
-      end
-      assert_empty cells
-    end
-
-    assert_empty rows_cells
+    assert_table_structure [[@a, @b, @c], [@d], [@e, @f], [@g]], @table
   end
 end
 
 
 describe "a simple column" do
   before do
-    @col = Tabletree.column do |c|
+    @col = Tablemaker.column do |c|
       c.cell("A")
       c.cell("B")
     end
@@ -124,7 +100,7 @@ end
 
 describe "nested columns" do
   before do
-    @col = Tabletree.column do |c|
+    @col = Tablemaker.column do |c|
       c.cell("A")
       @row = c.row do |r|
         r.column do |c2|
@@ -150,7 +126,7 @@ describe "simple 3/2" do
     # | D |   E   |
     # +---+-------+
     #
-    @table = Tabletree.column do |t|
+    @table = Tablemaker.column do |t|
       @r1 = t.row do |r1|
         @a = r1.cell("A")
         @b = r1.cell("B")
@@ -175,7 +151,7 @@ describe "spanning cols/rows at the same time" do
     # | E |       |
     # +---+-------+
     #
-    @table = Tabletree.column do |t|
+    @table = Tablemaker.column do |t|
       @r1 = t.row do |r1|
         @a = r1.cell("A")
         @b = r1.cell("B")
@@ -216,14 +192,7 @@ describe "spanning cols/rows at the same time" do
 
 
   it "should allow iteration over rows/cols" do
-    rows_cells = [[@a, @b, @c], [@d, @f], [@e]]
-
-    @table.each_row do |row|
-      cells = rows_cells.shift
-      row.each do |cell|
-        assert_equal cells.shift, cell
-      end
-    end
+    assert_table_structure [[@a, @b, @c], [@d, @f], [@e]], @table
   end
 end
 

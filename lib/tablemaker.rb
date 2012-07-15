@@ -1,7 +1,7 @@
-require "tabletree/version"
+require "tablemaker/version"
 require 'fiber'
 
-class Tabletree
+class Tablemaker
 
   class Frame
     attr_reader :parent
@@ -55,10 +55,6 @@ class Tabletree
 
     def rows; 1 end
     def columns; 1 end
-
-    def inspect
-      "#{@data}(#{real_cols},#{real_rows})"
-    end
   end
 
   class Node < Frame
@@ -100,43 +96,6 @@ class Tabletree
         items = []
       end
     end
-
-    def cell_iterator(&blk)
-      fibers = @items.map do |i|
-        Fiber.new do
-          i.cell_iterator(&blk)
-        end
-      end
-
-      while !fibers.empty?
-        fibers = fibers.map { |f| f.resume }.compact
-        Fiber.yield(Fiber.current)
-      end
-    end
-
-    #   @items.inject([ax,ay]) do |(x,y),i|
-    #     dx = x-i.width
-    #     dy = y-i.height
-    #     if dx < 0 && dy < 0
-    #       if i.is_a?(Cell)
-    #         return i
-    #       else
-    #         puts
-    #         p [[i.width, i.height], i.items.inspect]
-    #         return i.cell_at(x,y)
-    #       end
-    #     end
-    #     x -= i.width if self.is_a?(Column)
-    #     y -= i.height if self.is_a?(Row)
-
-    #     [x,y]
-    #   end
-    #   nil
-    # end
-
-    def inspect
-      "#{self.class.name.split("::").last[0]}#{@items.inspect}"
-    end
   end
 
   class Column < Node
@@ -169,37 +128,27 @@ class Tabletree
     def rows
       @items.map(&:rows).max
     end
+
+    def cell_iterator(&blk)
+      fibers = @items.map do |i|
+        Fiber.new do
+          i.cell_iterator(&blk)
+        end
+      end
+
+      while !fibers.empty?
+        fibers = fibers.map { |f| f.resume }.compact
+        Fiber.yield(Fiber.current)
+      end
+    end
   end
 
 
   def self.column(&blk)
     Column.new(&blk)
   end
-
   def self.row(&blk)
     Row.new(&blk)
-  end
-
-  def self.example
-    Tabletree.column do |t|
-      t.cell("A")
-      t.row do |r|
-        r.column do |c|
-          c.row do |rr|
-            rr.cell("B")
-            rr.cell("D")
-          end
-          c.cell("C")
-        end
-        r.column do |c|
-          c.cell("E")
-          c.row do |rr|
-            rr.cell("F")
-            rr.cell("G")
-          end
-        end
-      end
-    end
   end
 
 end
