@@ -83,7 +83,6 @@ describe "an example table" do
   end
 end
 
-
 describe "a simple column" do
   before do
     @col = Tablemaker.column do |c|
@@ -194,5 +193,39 @@ describe "spanning cols/rows at the same time" do
   it "should allow iteration over rows/cols" do
     assert_table_structure [[@a, @b, @c], [@d, @f], [@e]], @table
   end
+end
+
+describe "starting with rows or columns does not matter" do
+
+  before do
+    @table1 = Tablemaker.row do |r|
+      r.column do |c|
+        @a1 = c.cell("A")
+        @c1 = c.cell("C")
+      end
+      r.column do |c|
+        @b1 = c.cell("B")
+        @d1 = c.cell("D")
+      end
+    end
+
+    @table2 = Tablemaker.column do |c|
+      c.row do |r|
+        @a2 = r.cell("A")
+        @b2 = r.cell("B")
+      end
+      c.row do |r|
+        @c2 = r.cell("C")
+        @d2 = r.cell("D")
+      end
+    end
+  end
+
+  it "should have correct structure" do
+    assert_table_structure [[@a1, @b1], [@c1, @d1]], @table1
+    assert_table_structure [[@a2, @b2], [@c2, @d2]], @table2
+  end
+
+
 end
 

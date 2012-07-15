@@ -1,73 +1,74 @@
-# Tabletree
+# Tablemaker
 
 HTML table generator that allows arbitrary nested cell subdivisions
 and applies colspan/rowspan as needed.
 
+## Examples
+
 A very basic table:
 
-    +---+---+
-    | A | B |
-    +---+---+
-    | C | D |
-    +---+---+
-
-    Tabletree.row do |r|
-      t.column do |r1|
-        r1.cell("A")
-        r1.cell("B")
+    # +---+---+
+    # | A | B |
+    # +---+---+
+    # | C | D |
+    # +---+---+
+    #
+    @table2 = Tablemaker.column do |c|
+      c.row do |r|
+        r.cell("A")
+        r.cell("B")
       end
-      r.column do |r2|
-        r2.cell("C")
-        r2.cell("D")
+      c.row do |r|
+        @c2 = r.cell("C")
+        @d2 = r.cell("D")
       end
     end
 
     # but you can also start with columns and construct the table left-to-right. this produces the exact same result:
-
-    Tabletree.column do |c|
-      t.row do |c1|
-        c1.cell("A")
-        c2.cell("C")
+    #
+    Tablemaker.row do |r|
+      r.column do |c|
+        c.cell("A")
+        c.cell("C")
       end
-      t.row do |c2|
-        c2.cell("B")
-        c2.cell("D")
+      r.column do |c|
+        c.cell("B")
+        c.cell("D")
       end
     end
 
-
 A more advanced example:
 
-    +---+---+---+
-    |   | B |   |
-    +   +---+ C +
-    |   | D |   |
-    + A +---+---+
-    |   |   | F |
-    +   + E +---+
-    |   |   | G |
-    +---+---+---+
-
-
-    table = Tabletree.column do |t|
+    # +---+---+---+
+    # |   | B |   |
+    # |   +---+ C |
+    # |   | D |   |
+    # | A +---+---+
+    # |   |   | F |
+    # |   | E +---+
+    # |   |   | G |
+    # +---+---+---+
+    #
+    @table = Tablemaker.row do |t|
       t.cell("A")
-      t.row do |r|
-        r.column do |c|
-          c.row do |rr|
+      t.column do |r|
+        r.row do |c|
+          c.column do |rr|
             rr.cell("B")
             rr.cell("D")
           end
           c.cell("C")
         end
-        r.column do |c|
+        r.row do |c|
           c.cell("E")
-          c.row do |rr|
+          c.column do |rr|
             rr.cell("F")
             rr.cell("G")
           end
         end
       end
     end
+
 
 this will generate the following output:
 
@@ -90,13 +91,13 @@ this will generate the following output:
     </table>
 
 
-Tabletree keeps track of all the rowspan/colspan attributes required to generate a valid HTML table
+Tablemaker keeps track of all the rowspan/colspan attributes required to generate a valid HTML table
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
-    gem 'tabletree'
+    gem 'tablemaker'
 
 And then execute:
 
@@ -104,16 +105,6 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install tabletree
+    $ gem install tablemaker
 
-## Usage
 
-TODO: Write usage instructions here
-
-## Contributing
-
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Added some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
