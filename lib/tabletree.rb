@@ -37,17 +37,6 @@ class Tabletree
     def real_dimensions
       [real_cols, real_rows]
     end
-
-    def each_row
-      f = Fiber.new do
-        f2 = yield self
-
-      end
-
-      f.resume
-
-    end
-
   end
 
   class Cell < Frame
@@ -59,7 +48,7 @@ class Tabletree
       @data
     end
 
-    def each
+    def cell_iterator
       yield self
       nil
     end
@@ -68,7 +57,7 @@ class Tabletree
     def columns; 1 end
 
     def inspect
-      @data
+      "#{@data}(#{real_cols},#{real_rows})"
     end
   end
 
@@ -87,19 +76,42 @@ class Tabletree
     end
 
     def cells
-      @items.flat_map do |i|
-        i.is_a?(Cell) ? i : i.cells
+      f = Fiber.new do
+        cell_iterator do |i|
+          yield i
+        end
+        nil
+      end
+      f = f.resume while f && f.alive?
+    end
+
+    def each_row
+      items = []
+      f = Fiber.new do
+        cell_iterator do |i|
+          items << i
+        end
+        nil
+      end
+
+      while f && f.alive?
+        f = f.resume
+        yield items unless items.empty?
+        items = []
       end
     end
 
-    def each(&blk)
+    def cell_iterator(&blk)
       fibers = @items.map do |i|
         Fiber.new do
-          i.each(&blk)
+          i.cell_iterator(&blk)
         end
       end
 
-      fibers = fibers.map { |f| f.resume }.compact
+      while !fibers.empty?
+        fibers = fibers.map { |f| f.resume }.compact
+        Fiber.yield(Fiber.current)
+      end
     end
 
     #   @items.inject([ax,ay]) do |(x,y),i|
@@ -138,9 +150,9 @@ class Tabletree
       @items.map(&:rows).inject(&:+)
     end
 
-    def each(&blk)
+    def cell_iterator(&blk)
       @items.each do |i|
-        i.each(&blk)
+        i.cell_iterator(&blk)
         Fiber.yield(Fiber.current)
       end
       nil

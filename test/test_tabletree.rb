@@ -88,6 +88,10 @@ describe "the example" do
     assert_equal [1,4], @a.real_dimensions
   end
 
+  it "should yield cells in the correct order" do
+    assert_equal [@a, @b, @c, @d, @e, @f, @g], @table.to_enum(:cells).to_a
+  end
+
   it "should allow iteration over rows/cols" do
     rows_cells = [[@a, @b, @c], [@d], [@e, @f], [@g]]
 
@@ -98,6 +102,8 @@ describe "the example" do
       end
       assert_empty cells
     end
+
+    assert_empty rows_cells
   end
 end
 
@@ -203,9 +209,9 @@ describe "spanning cols/rows at the same time" do
   end
 
   it "should iterate correctly over subitems" do
-    assert_equal [@a, @b, @c], @r1.to_a
-    # assert_equal [@d, @f, @e], @r2.to_a
-    # assert_equal [@a, @b, @c, @d, @f, @e], @table.to_a
+    assert_equal [@a, @b, @c], @r1.to_enum(:cells).to_a
+    assert_equal [@d, @f, @e], @r2.to_enum(:cells).to_a
+    assert_equal [@a, @b, @c, @d, @f, @e], @table.to_enum(:cells).to_a
   end
 
 
@@ -219,30 +225,5 @@ describe "spanning cols/rows at the same time" do
       end
     end
   end
-
 end
-
-  # it "should have correct dimensions for subitems" do
-  #   # assert_equal [1, 4], @table.items.map(&:height)
-  #   # assert_equal [2, 2], @table.items.last.items.map(&:height)
-  # end
-
-  # it "should return all the cells" do
-  #   assert_equal 7, @table.cells.length
-  # end
-
-  # it "should have cell_at" do
-  #   assert_equal "A", @table.cell_at(0,0).data
-  #   assert_equal "B", @table.cell_at(1,0).data
-  #   assert_equal "C", @table.cell_at(2,0).data
-  #   assert_equal "D", @table.cell_at(1,1).data
-  #   assert_equal "E", @table.cell_at(1,2).data
-  #   assert_equal "F", @table.cell_at(2,2).data
-  #   assert_equal "G", @table.cell_at(2,3).data
-  # end
-
-  # it "should have correct cell dimensions" do
-  #   # assert_equal [1,4], @table.cell_at(0,0).dimensions
-
-  # end
 
