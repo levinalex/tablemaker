@@ -1,4 +1,5 @@
 require "tabletree/version"
+require 'fiber'
 
 class Tabletree
 
@@ -37,6 +38,16 @@ class Tabletree
       [real_cols, real_rows]
     end
 
+    def each_row
+      f = Fiber.new do
+        f2 = yield self
+
+      end
+
+      f.resume
+
+    end
+
   end
 
   class Cell < Frame
@@ -46,6 +57,11 @@ class Tabletree
     end
     def data
       @data
+    end
+
+    def each
+      yield self
+      nil
     end
 
     def rows; 1 end
@@ -58,6 +74,7 @@ class Tabletree
 
   class Node < Frame
     attr_reader :items
+    include Enumerable
 
     def initialize(p=nil, idx = nil)
       super
@@ -73,6 +90,16 @@ class Tabletree
       @items.flat_map do |i|
         i.is_a?(Cell) ? i : i.cells
       end
+    end
+
+    def each(&blk)
+      fibers = @items.map do |i|
+        Fiber.new do
+          i.each(&blk)
+        end
+      end
+
+      fibers = fibers.map { |f| f.resume }.compact
     end
 
     #   @items.inject([ax,ay]) do |(x,y),i|
@@ -110,6 +137,14 @@ class Tabletree
     def rows
       @items.map(&:rows).inject(&:+)
     end
+
+    def each(&blk)
+      @items.each do |i|
+        i.each(&blk)
+        Fiber.yield(Fiber.current)
+      end
+      nil
+    end
   end
 
   class Row < Node
@@ -122,7 +157,6 @@ class Tabletree
     def rows
       @items.map(&:rows).max
     end
-
   end
 
 

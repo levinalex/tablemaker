@@ -83,6 +83,22 @@ describe "the example" do
     assert_equal 4, @table.rows
     assert_equal 3, @table.columns
   end
+
+  it "should have real dimensions for cells" do
+    assert_equal [1,4], @a.real_dimensions
+  end
+
+  it "should allow iteration over rows/cols" do
+    rows_cells = [[@a, @b, @c], [@d], [@e, @f], [@g]]
+
+    @table.each_row do |row|
+      cells = rows_cells.shift
+      row.each do |cell|
+        assert_equal cells.shift, cell
+      end
+      assert_empty cells
+    end
+  end
 end
 
 
@@ -162,7 +178,7 @@ describe "spanning cols/rows at the same time" do
       @r2 = t.row do |r2|
         @c1 = @c1 = r2.column do |c1|
           @d = c1.cell("D")
-          c1.cell("E")
+          @e = c1.cell("E")
         end
         @c2 = r2.column do |c2|
           @f = c2.cell("F")
@@ -183,6 +199,25 @@ describe "spanning cols/rows at the same time" do
     assert_equal [3,2], @r2.real_dimensions
     assert_equal [1,2], @c1.real_dimensions
     assert_equal [2,2], @c2.real_dimensions
+    assert_equal [2,2], @f.real_dimensions
+  end
+
+  it "should iterate correctly over subitems" do
+    assert_equal [@a, @b, @c], @r1.to_a
+    # assert_equal [@d, @f, @e], @r2.to_a
+    # assert_equal [@a, @b, @c, @d, @f, @e], @table.to_a
+  end
+
+
+  it "should allow iteration over rows/cols" do
+    rows_cells = [[@a, @b, @c], [@d, @f], [@e]]
+
+    @table.each_row do |row|
+      cells = rows_cells.shift
+      row.each do |cell|
+        assert_equal cells.shift, cell
+      end
+    end
   end
 
 end
