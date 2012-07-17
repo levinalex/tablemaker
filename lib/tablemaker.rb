@@ -9,7 +9,6 @@ module Tablemaker
   def self.row(&blk)
     Row.new(&blk)
   end
-
 end
 
 require 'tablemaker/railtie' if defined?(Rails)
