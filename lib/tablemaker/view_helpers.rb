@@ -4,10 +4,11 @@ module Tablemaker
   module ViewHelpers
     module ActionView
       class TableHelper
-        def initialize(&block)
+        def initialize(context, &block)
+          @context = context
           @stack = []
           @root = Tablemaker.column do |r|
-            with_context(r) do
+            stack(r) do
               yield self
             end
           end
@@ -15,7 +16,7 @@ module Tablemaker
 
         def row
           current.row do |r|
-            with_context(r) do
+            stack(r) do
               yield
             end
           end
@@ -28,17 +29,22 @@ module Tablemaker
             end
           else
             current.column do |c|
-              with_context(c, &blk)
+              stack(c, &blk)
             end
           end
         end
 
-        def td(*args)
-          current.cell(*args)
+        def td(*args, &block)
+          text = if block_given?
+                   @context.capture(&block)
+                 else
+                   args.shift
+                 end
+          current.cell(text, *args)
         end
 
-        def to_html(context, attrs = {})
-          context.content_tag("table") do
+        def to_html(attrs = {})
+          context.content_tag("table", attrs) do
             @root.each_row do |r|
               s = context.content_tag("tr") do
                 r.each do |c|
@@ -60,10 +66,14 @@ module Tablemaker
 
         private
 
-        def with_context(frame)
+        def stack(frame)
           @stack.push(frame)
           yield
           @stack.pop
+        end
+
+        def context
+          @context
         end
 
         def current
@@ -74,7 +84,7 @@ module Tablemaker
 
 
       def make_table(opts = {}, &block)
-        table = TableHelper.new(&block).to_html(self)
+        table = TableHelper.new(self, &block).to_html(opts)
       end
     end
   end

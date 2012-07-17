@@ -12,14 +12,14 @@ class TestTableMaker < ActionView::TestCase
   end
 
   test "should output simple table correctly" do
-    table = make_table do |t|
+    table = make_table(class: "table") do |t|
             t.row do
               t.td("A")
               t.td("B")
             end
           end
 
-    expected = "<table><tr><td>A</td><td>B</td></tr></table>"
+    expected = "<table class='table'><tr><td>A</td><td>B</td></tr></table>"
     assert_dom_equal expected, table
   end
 
