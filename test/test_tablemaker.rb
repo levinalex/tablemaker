@@ -2,17 +2,17 @@ require 'helper'
 
 
 def assert_table_structure(structure, table)
-  structure = structure.dup
+  structure = structure
 
+  t = []
   table.each_row do |row|
-    cells = structure.shift.dup
+    r = []
     row.each do |cell|
-      assert_equal cells.shift, cell
+      r << cell
     end
-    assert_empty cells
+    t << r
   end
-
-  assert_empty structure
+  assert_equal structure, t
 end
 
 describe "an example table" do
