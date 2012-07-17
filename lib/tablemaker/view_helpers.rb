@@ -14,7 +14,7 @@ module Tablemaker
           end
         end
 
-        def row
+        def row(&block)
           current.row do |r|
             stack(r) do
               yield
@@ -22,14 +22,14 @@ module Tablemaker
           end
         end
 
-        def column(&blk)
+        def column(&block)
           if @stack.size == 1
             row do
-              column(&blk)
+              column(&block)
             end
           else
             current.column do |c|
-              stack(c, &blk)
+              stack(c, &block)
             end
           end
         end
