@@ -34,13 +34,12 @@ module Tablemaker
           end
         end
 
-        def td(*args, &block)
-          text = if block_given?
-                   @context.capture(&block)
-                 else
-                   args.shift
-                 end
-          current.cell(text, *args)
+        def td(*args, &blk)
+          cell("td", *args, &blk)
+        end
+
+        def th(*args, &blk)
+          cell("th", *args, &blk)
         end
 
         def to_html(attrs = {})
@@ -51,8 +50,8 @@ module Tablemaker
                   attrs = {}
                   attrs[:rowspan] = c.real_rows if c.real_rows > 1
                   attrs[:colspan] = c.real_cols if c.real_cols > 1
-                  s2 = context.content_tag("td", attrs) do
-                    c.data
+                  s2 = context.content_tag(c.data[:name], c.data[:opts].merge(attrs)) do
+                    c.data[:text]
                   end
 
                   context.concat(s2)
@@ -65,6 +64,16 @@ module Tablemaker
 
 
         private
+
+        def cell(name, *args, &block)
+          opts = args.extract_options!
+          text = if block_given?
+                   @context.capture(&block)
+                 else
+                   args.shift
+                 end
+          current.cell(text: text, name: name, opts: opts)
+        end
 
         def stack(frame)
           @stack.push(frame)
