@@ -100,10 +100,10 @@ module Tablemaker
       Row.new(self, @items.length, &blk).tap { |r| @items << r }
     end
     def columns
-      @items.map(&:columns).max
+      @items.map(&:columns).max || 0
     end
     def rows
-      @items.map(&:rows).inject(&:+)
+      @items.map(&:rows).inject(0, &:+)
     end
 
     def cell_iterator(&blk)
@@ -120,10 +120,10 @@ module Tablemaker
       Column.new(self, @items.length, &blk).tap { |c| @items << c }
     end
     def columns
-      @items.map(&:columns).inject(&:+)
+      @items.map(&:columns).inject(0, &:+)
     end
     def rows
-      @items.map(&:rows).max
+      @items.map(&:rows).max || 0
     end
 
     def cell_iterator(&blk)
