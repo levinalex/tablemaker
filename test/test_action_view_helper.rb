@@ -23,18 +23,6 @@ class TestTableMaker < ActionView::TestCase
     assert_dom_equal expected, table
   end
 
-  test "should output simple table starting with columns correctly" do
-    table = make_table do |t|
-            t.column do
-              t.td("A")
-              t.td("B")
-            end
-          end
-
-    expected = "<table><tr><td>A</td></tr><tr><td>B</td></tr></table>"
-    assert_dom_equal expected, table
-  end
-
   test "should output complex table correctly" do
     table = make_table do |t|
       t.row do

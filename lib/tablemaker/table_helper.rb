@@ -20,21 +20,14 @@ module Tablemaker
     end
 
     def column(&block)
-      if @stack.size == 1
-        row do
-          column(&block)
-        end
-      else
-        current.column do |c|
-          stack(c, &block)
-        end
+      current.column do |c|
+        stack(c, &block)
       end
     end
 
     def line(&block)
-      current.respond_to?(:row) ? row(&block) : column(&block) #  : column(&block)
+      current.respond_to?(:row) ? row(&block) : column(&block)
     end
-
 
     def td(*args, &blk)
       cell("td", *args, &blk)
