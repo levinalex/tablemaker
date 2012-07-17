@@ -29,9 +29,7 @@ this will generate this output:
   </tr>
   <tr>
     <td>E</td>
-    <td style='background: green' rowspan='2' colspan='2'>
-      <p>cell centent</p
-    ></td>
+    <td style='background: green' rowspan='2' colspan='2'><p>cell centent</p></td>
   </tr>
   <tr>
     <td>F</td>
@@ -50,8 +48,8 @@ source:
       <tr>
         <td>E</td>
         <td style='background: green' rowspan='2' colspan='2'>
-          <p>cell centent</p
-        ></td>
+          <p>cell centent</p>
+        </td>
       </tr>
       <tr>
         <td>F</td>
