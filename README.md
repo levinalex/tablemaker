@@ -3,7 +3,63 @@
 HTML table generator that allows arbitrary nested cell subdivisions
 and applies colspan/rowspan as needed.
 
-## Examples
+Including the gen in your Rails project will give you a new view helper `make_table`
+
+## Usage
+
+    = make_table(class: 'foo') do |t|
+      - t.row do
+        - t.th("A")
+        - t.th("B")
+        - t.th("C")
+      - t.row do
+        - t.column do
+          - t.td("E")
+          - t.td("F)
+      - t.td(style: 'background: green') do
+        %p cell content
+
+this will generate this output:
+
+<table class='foo'>
+  <tr>
+    <td>A</td>
+    <td>B</td>
+    <td>C</td>
+  </tr>
+  <tr>
+    <td>E</td>
+    <td style='background: green' rowspan='2' colspan='2'>
+      <p>cell centent</p
+    ></td>
+  </tr>
+  <tr>
+    <td>F</td>
+  </tr>
+</table>
+
+
+source:
+
+    <table class='foo'>
+      <tr>
+        <td>A</td>
+        <td>B</td>
+        <td>C</td>
+      </tr>
+      <tr>
+        <td>E</td>
+        <td style='background: green' rowspan='2' colspan='2'>
+          <p>cell centent</p
+        ></td>
+      </tr>
+      <tr>
+        <td>F</td>
+      </tr>
+    </table>
+
+
+## Examples outside Rails
 
 A very basic table:
 
