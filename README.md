@@ -126,23 +126,23 @@ A more advanced example:
 
 this will generate the following output:
 
-    <table>
-      <tr>
-        <td rowspan=4>A</td>
-        <td rowspan=2>B</td>
-        <td>D</td>
-      </tr>
-      <tr>
-        <td>E</td>
-      </tr>
-      <tr>
-        <td rowspan=2>C</td>
-        <td>F</td>
-      </tr>
-      <tr>
-        <td>G</td>
-      </tr>
-    </table>
+<table>
+  <tr>
+    <td rowspan=4>A</td>
+    <td rowspan=2>B</td>
+    <td>D</td>
+  </tr>
+  <tr>
+    <td>E</td>
+  </tr>
+  <tr>
+    <td rowspan=2>C</td>
+    <td>F</td>
+  </tr>
+  <tr>
+    <td>G</td>
+  </tr>
+</table>
 
 
 Tablemaker keeps track of all the rowspan/colspan attributes required to generate a valid HTML table
