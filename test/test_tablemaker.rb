@@ -225,7 +225,5 @@ describe "starting with rows or columns does not matter" do
     assert_table_structure [[@a1, @b1], [@c1, @d1]], @table1
     assert_table_structure [[@a2, @b2], [@c2, @d2]], @table2
   end
-
-
 end
 

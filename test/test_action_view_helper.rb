@@ -59,4 +59,33 @@ class TestTableMaker < ActionView::TestCase
 
     assert_dom_equal expected, table
   end
+
+  test "should have generic 'line' method that alternates between rows and columns" do
+    table = make_table do |t|
+      t.line do
+        t.line do
+          t.line do
+            t.td("A")
+            t.td("B")
+          end
+        end
+        t.line do
+          t.td("C")
+          t.td("D")
+        end
+      end
+      t.line do
+        t.td("E")
+        t.td("F")
+      end
+    end
+
+    expected = "<table>" +
+                 "<tr><td rowspan=2>A</td><td rowspan=2>B</td><td>C</td></tr>" +
+                 "<tr><td>D</td></tr>" +
+                 "<tr><td>E</td><td colspan=2>F</td></tr>" +
+               "</table>"
+
+    assert_dom_equal expected, table
+  end
 end

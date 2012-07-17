@@ -34,6 +34,11 @@ module Tablemaker
           end
         end
 
+        def line(&block)
+          current.respond_to?(:row) ? row(&block) : column(&block) #  : column(&block)
+        end
+
+
         def td(*args, &blk)
           cell("td", *args, &blk)
         end
