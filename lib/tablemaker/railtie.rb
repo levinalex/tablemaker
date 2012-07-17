@@ -5,7 +5,7 @@ module Tablemaker
     initializer "tablemaker.configure" do |app|
       ActiveSupport.on_load :action_view do
         require 'tablemaker/view_helpers'
-        include Sorted::ViewHelpers::ActionView
+        include Tablemaker::ViewHelpers::ActionView
       end
     end
   end
