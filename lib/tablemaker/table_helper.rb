@@ -83,6 +83,5 @@ module Tablemaker
     def current
       @stack.last
     end
-
   end
 end
