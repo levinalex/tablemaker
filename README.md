@@ -3,7 +3,7 @@
 HTML table generator that allows arbitrary nested cell subdivisions
 and applies colspan/rowspan as needed.
 
-Including the gen in your Rails project will give you a new view helper `make_table`
+Including the gem in your Rails project will give you a new view helper `make_table`
 
 ## Usage
 
