@@ -16,8 +16,7 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = Tablemaker::VERSION
 
-  gem.add_dependency "rake"
-  gem.add_dependency "psych"
+  gem.add_development_dependency "rake"
   gem.add_development_dependency "minitest"
   gem.add_development_dependency "rails", ">= 3.1.0"
 end
