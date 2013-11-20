@@ -15,7 +15,7 @@ Gem::Specification.new do |gem|
   gem.name          = "tablemaker"
   gem.require_paths = ["lib"]
   gem.version       = Tablemaker::VERSION
-  spec.license      = 'MIT'
+  gem.license       = 'MIT'
 
   gem.add_development_dependency "rake"
   gem.add_development_dependency "minitest"
