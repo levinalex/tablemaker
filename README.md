@@ -3,6 +3,8 @@
 HTML table generator that allows arbitrary nested cell subdivisions
 and applies colspan/rowspan as needed.
 
+[![Build Status](https://travis-ci.org/levinalex/tablemaker.svg?branch=master)](https://travis-ci.org/levinalex/tablemaker)
+
 Including the gem in your Rails project will give you a new view helper `make_table`
 
 ## Usage
