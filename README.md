@@ -18,7 +18,7 @@ Including the gem in your Rails project will give you a new view helper `make_ta
   - t.row do
     - t.column do
       - t.td("E")
-      - t.td("F)
+      - t.td("F")
   - t.td(style: 'background: green') do
     %p cell content
 ```
